@@ -2,8 +2,14 @@
 <div class="registration">
 	<div class="container">
 		<div class="row justify-content-center">
-			<div class="col-md-8">
-				<b-card class="mt-3" header="Registration">
+			<div class="col-md-6">
+				<img alt="OMT logo" src="../assets/unnamed.jpg">
+				<h3>Registration</h3>
+			    <p>
+						register the use of the resource
+			    </p>
+			</div>
+			<div class="col-md-4 form">
 				<b-form @submit="onSubmit" @reset="onReset" v-if="show">
 					<p v-if="errors.length">
 				    <ul>
@@ -47,7 +53,6 @@
 					<b-button type="submit">Submit</b-button>
 					<b-button type="reset">Reset</b-button>
 				</b-form>
-				</b-card>
 			</div>
 		</div>
 	</div>
@@ -70,9 +75,24 @@
     },
     methods: {
       onSubmit(evt) {
-      	this.checkForm()
-        evt.preventDefault()
-        alert(JSON.stringify(this.form))
+      	let isChecked = this.checkForm()
+        
+        if (isChecked) {
+        	let currentObj = this;
+        	this.$request.post('/api/registration', {
+                    name: this.form.name,
+		         	email: this.form.email,
+		         	password: this.form.password,
+		         	role: 'user'
+                })
+        		.then(function (response) {
+                    currentObj.output = response.data;
+                })
+                .catch(function (error) {
+                    currentObj.output = error;
+                });
+     	}
+     	evt.preventDefault()
       },
       onReset(evt) {
         evt.preventDefault()
@@ -122,9 +142,19 @@
 </script>
 
 <style scoped>
-
+.registration {
+	 margin: 60px 0 0;
+}
+.form {
+	margin: 30px 0 0;
+}
 button {
 	margin: 0 10px;
+}
+ul {
+	list-style-type: none;
+	text-align: left;
+	color: red;
 }
 
 </style>

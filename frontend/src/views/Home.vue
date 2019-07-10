@@ -1,7 +1,6 @@
 <template>
   <div class="home">
-    <img alt="OMT logo" src="../assets/unnamed.jpg">
-    <StartPage msg="Welcome to Your Vue.js App"/>
+    <StartPage />
   </div>
 </template>
 

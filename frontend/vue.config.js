@@ -1,4 +1,8 @@
 module.exports = {
+  devServer: {
+        proxy: 'http://myfinance.loc/',
+        public: '192.168.10.1:8080/'
+    },
   // proxy API requests to Valet during development
   
 
