@@ -2,7 +2,7 @@ import store from './store'
 console.log(store, 'store')
 let baseURL = 'http://localhost:8080'
 
-const getToken = store.state.accessToken
+const token = store.getters.getAccessToken;
 
 async function getRequest(url, method, data = {}) {
   let fetchUrl = baseURL + url
@@ -11,11 +11,16 @@ async function getRequest(url, method, data = {}) {
     'Content-Type': 'application/json',
   }
 
-  if (getToken) {
+  if (token) {
     headers = {
-      'Authorization': `Bearer ${getToken}`,
+      'Authorization': `Bearer ${token}`,
       ...headers
     }
+  }
+
+  let postData = null
+  if (data) {
+    postData = data.isFile ? data : JSON.stringify(data)
   }
 
   // Значения по умолчанию обозначены знаком *
@@ -26,7 +31,7 @@ async function getRequest(url, method, data = {}) {
         headers: headers,
         redirect: 'follow', // manual, *follow, error
         referrer: 'no-referrer', // no-referrer, *client
-        body: JSON.stringify(data), // тип данных в body должен соответвовать значению заголовка "Content-Type"
+        body: postData, // тип данных в body должен соответвовать значению заголовка "Content-Type"
     })
     return await response.json();
     //.then(response => response.json()); // парсит JSON ответ в Javascript объект
@@ -35,7 +40,7 @@ async function getRequest(url, method, data = {}) {
 
 const request = {
   get: async (url, options) => {
-    let response = await getRequest(url, 'GET', options)
+    let response = await getRequest(url, 'GET', options = "")
     return response
 
   },

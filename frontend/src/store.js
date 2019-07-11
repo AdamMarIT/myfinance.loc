@@ -16,7 +16,8 @@ export default new Vuex.Store({
   	currentUser : {}
   },
   getters: {
-    getAccessToken(state) {
+  	isAuthenticated: state => !!state.accessToken,
+    getAccessToken: state => {
         return state.accessToken
     }
   },

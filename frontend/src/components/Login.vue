@@ -51,21 +51,17 @@
    
     methods: {
       async onSubmit() {
-      	let response = await this.$request.post('/api/auth/login', {
+      	let response = await this.$request.post('/api/login', {
          	email: this.form.email,
          	password: this.form.password
         })
         let token = response.access_token;
-        this.isLogin(token);
+	        if (token) {
+						this.$store.commit('setAccessToken', token)
+						this.$router.push("dashboard") 
+					}
       	},
 			
-
-			isLogin(token) {
-				if (token) {
-					this.$store.commit('setAccessToken', token)
-					this.$router.go(dashboard)
-				}
-			}
 		}
 }
 

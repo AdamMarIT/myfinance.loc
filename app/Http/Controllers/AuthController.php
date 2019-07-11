@@ -22,7 +22,7 @@ class AuthController extends Controller
         $credentials = request(['email', 'password']);
         
         $user = User::where('email', $credentials['email'])->first();
-		//dd(bcrypt($credentials['password']));
+		
 		if (Hash::check($credentials['password'], $user->password)){
 			$token = JWTAuth::fromUser($user);
 			return $this->respondWithToken($token);
@@ -46,7 +46,7 @@ class AuthController extends Controller
      */
     public function me()
     {
-        return response()->json(auth()->user());
+        return response()->json(auth('api')->user());
     }
 
     /**

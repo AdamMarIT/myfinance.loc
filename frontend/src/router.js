@@ -3,8 +3,45 @@ import Router from 'vue-router'
 import Home from './views/Home.vue'
 import Registration from './views/Registration.vue'
 import Dashboard from './views/Dashboard.vue'
+import MainLayout from './views/MainLayout.vue'
+import Profile from './views/Profile.vue'
+import Report from './views/Report.vue'
 
 Vue.use(Router)
+
+let dashboardMenu = {
+  path: '/dashboard',
+      name: 'dashboard',
+      component: MainLayout,
+      redirect: '/dashboard/main',
+      children: [
+        {
+          path: 'main',
+          name: 'Main',
+          component: Dashboard
+        },
+        {
+          path: 'profile',
+          name: 'Profile',
+          component: Profile
+        }
+      ]  
+}
+
+let reportMenu = {
+  path: '/report',
+      name: 'report',
+      component: MainLayout,
+      redirect: '/report/month',
+      children: [
+        {
+          path: 'month',
+          name: 'reportMain',
+          component: Report
+        },
+
+      ]  
+}
 
 export default new Router({
   mode: 'history',
@@ -20,11 +57,7 @@ export default new Router({
       name: 'registration',
       component: Registration
     },
-    {
-      path: '/dashboard',
-      name: 'dashboard',
-      component: Dashboard,
-      
-    }
+    dashboardMenu,   
+    reportMenu
   ]
 })
