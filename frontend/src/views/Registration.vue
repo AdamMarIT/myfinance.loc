@@ -90,7 +90,7 @@
         			if (response.status == 'error') {
                     currentObj.errors.push('The email has already been taken')
               } else {
-        				currentObj.$router.push("dashboard")
+        				currentObj.$router.push("/")
         			}
         		})
             .catch(function (error) {

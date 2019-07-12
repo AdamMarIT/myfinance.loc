@@ -4,10 +4,8 @@
 		<div class="row justify-content-center">
 			<div class="col-md-4 form">
 				<b-form>
-					<p v-if="errors.length">
-				    <ul>
-				      <li v-for="error in errors">{{ error }}</li>
-				    </ul>
+					<p v-if="error" class="error">
+				    Invalid data entered
 				  </p>
 					<b-form-group id="input-group-1" label-for="input-1">
 						<b-form-input
@@ -23,7 +21,7 @@
 							id="password" 
 							v-model="form.password" 
 							type="password"
-							required placeholder="Enter your password">
+							required placeholder="Enter your password" @keyup.enter="onSubmit">
 						</b-form-input>
 					</b-form-group>
 					<b-button @click="onSubmit">Submit</b-button>
@@ -43,7 +41,7 @@
           email: '',
           password: '',
         },
-        errors: [],
+        error: false,
       }
     },
    
@@ -56,7 +54,10 @@
         let token = response.access_token;
 	        if (token) {
 						this.$store.commit('setAccessToken', token)
-						this.$router.push("dashboard") 
+						this.$router.push("dashboard")
+					} else {
+						this.error = true;
+						setTimeout(() => this.error = false, 2000);
 					}
       	},
 			
@@ -73,9 +74,7 @@
 button {
 	margin: 0 10px;
 }
-ul {
-	list-style-type: none;
-	text-align: left;
+.error {
 	color: red;
 }
 

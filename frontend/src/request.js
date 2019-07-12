@@ -2,7 +2,6 @@ import store from './store'
 
 let baseURL = 'http://localhost:8080'
 
-const token = store.getters.getAccessToken;
 
 async function getRequest(url, method, data = {}) {
   let fetchUrl = baseURL + url
@@ -10,6 +9,8 @@ async function getRequest(url, method, data = {}) {
   let headers = {
     'Content-Type': 'application/json',
   }
+
+  const token = store.getters.getAccessToken;
 
   if (token) {
     headers = {
@@ -22,7 +23,7 @@ async function getRequest(url, method, data = {}) {
   if (data) {
     postData = data.isFile ? data : JSON.stringify(data)
   }
-console.log(fetchUrl)
+
   // Значения по умолчанию обозначены знаком *
     let response =  await fetch(fetchUrl, {
         method: method, // *GET, POST, PUT, DELETE, etc.

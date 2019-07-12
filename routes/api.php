@@ -26,3 +26,4 @@ Route::group([
 });
 Route::post('login', 'AuthController@login');
 Route::post('/registration', 'AuthController@register')->name('registration');
+Route::get('course', 'DollarController@currentСourse');

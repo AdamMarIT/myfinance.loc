@@ -63,6 +63,10 @@ export default new Router({
       component: Registration
     },
     dashboardMenu,   
-    reportMenu
+    reportMenu,
+    {
+      path: '*', 
+      redirect: '/dashboard/main'
+    }
   ]
 })
