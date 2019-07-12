@@ -74,24 +74,31 @@
       }
     },
     methods: {
-      onSubmit(evt) {
-      	let isChecked = this.checkForm()
+      async onSubmit(evt) {
+      	let isChecked = await this.checkForm()
         
         if (isChecked) {
         	let currentObj = this;
-        	this.$request.post('/api/registration', {
-                    name: this.form.name,
+        	let res = this.$request.post('/api/registration', {
+              name: this.form.name,
 		         	email: this.form.email,
 		         	password: this.form.password,
-		         	role: 'user'
+		         	password_confirmation: this.form.confirmPassword
                 })
+        	
         		.then(function (response) {
-                    currentObj.output = response.data;
-                })
-                .catch(function (error) {
-                    currentObj.output = error;
+        			if (response.status == 'error') {
+                    currentObj.errors.push('The email has already been taken')
+              } else {
+        				currentObj.$router.push("dashboard")
+        			}
+        		})
+            .catch(function (error) {
+                	 console.log(error)
+                    
                 });
-     	}
+      
+     		}
      	evt.preventDefault()
       },
       onReset(evt) {

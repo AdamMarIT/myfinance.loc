@@ -1,5 +1,5 @@
 import store from './store'
-console.log(store, 'store')
+
 let baseURL = 'http://localhost:8080'
 
 const token = store.getters.getAccessToken;
@@ -22,7 +22,7 @@ async function getRequest(url, method, data = {}) {
   if (data) {
     postData = data.isFile ? data : JSON.stringify(data)
   }
-
+console.log(fetchUrl)
   // Значения по умолчанию обозначены знаком *
     let response =  await fetch(fetchUrl, {
         method: method, // *GET, POST, PUT, DELETE, etc.
@@ -42,13 +42,11 @@ const request = {
   get: async (url, options) => {
     let response = await getRequest(url, 'GET', options = "")
     return response
-
   },
 
   post: async (url, options) => {
     let response = await getRequest(url, 'POST', options)
     return response
-
   },
 
   install (Vue, options) {

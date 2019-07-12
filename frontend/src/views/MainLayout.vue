@@ -15,9 +15,9 @@
 				<b-nav-item href="#" class="navLink">Send my link</b-nav-item>
 				<b-nav-item-dropdown right>
 					<!-- Using 'button-content' slot -->
-					<template slot="button-content"><em>User</em></template>
+					<template slot="button-content"><em>{{this.userName}}</em></template>
 					<b-dropdown-item href="/dashboard/profile">Profile</b-dropdown-item>
-					<b-dropdown-item href="#">Sign Out</b-dropdown-item>
+					<b-dropdown-item @click="logOut">Sign Out</b-dropdown-item>
 				</b-nav-item-dropdown>
 			</b-navbar-nav>
 			</b-collapse>
@@ -29,7 +29,38 @@
 
 <script>
 
-export default {}
+export default {
+	data() {
+      return {
+        userName: '',
+      }
+    },
+
+	computed: {
+        userN: async function(){
+           let response = await this.$request.get('/api/auth/me')
+           console.log(response.name)
+           this.userName = { toString: function () {
+           		return response.name
+           	}
+           }
+           return response.name
+        }
+  },
+
+	methods: {
+		// async created() {
+		// 	let response = await this.$request.get('/api/auth/me')
+		// 	console.log(response, '123')
+		
+		// },
+
+	 	logOut() {
+	 		this.$store.commit('setAccessToken', '')
+			this.$router.push("/") 
+	 	}
+	}
+}
 	
 </script>
 

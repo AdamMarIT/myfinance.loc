@@ -24,6 +24,11 @@ let dashboardMenu = {
           path: 'profile',
           name: 'Profile',
           component: Profile
+        },
+        {
+          path: 'logout',
+          name: 'Logout',
+          component: Profile
         }
       ]  
 }
