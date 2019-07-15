@@ -1,12 +1,21 @@
 <template>
 <div class="income">
-	<td v-for="key in columns">
-   <!--  {{entry[key]}} -->
+	<td>
+   <div>{{ income.number}}</div>
   </td>
   <td>
-    <div class="button button-small" v-on:click="deleteIncome()">
-    &times;
-  	</div>
+  	<div>{{ income.date}}</div>
+  </td>
+  <td>
+  	<div>{{ income.sum}}</div>
+  </td>
+  <td>
+  	<div>
+	  	<b-dropdown id="dropdown-1" text="Action" class="m-md-2">
+		    <b-dropdown-item>Edit</b-dropdown-item>
+		    <b-dropdown-item  v-on:click="deleteIncome()">Delete</b-dropdown-item>
+		  </b-dropdown>
+		</div>
   </td>
 </div>
 </template>

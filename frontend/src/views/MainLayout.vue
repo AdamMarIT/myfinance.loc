@@ -16,7 +16,6 @@
 			</b-navbar-nav>
 			<!-- Right aligned nav items -->
 			<b-navbar-nav class="ml-auto">
-				<b-nav-item href="#" class="navLink">{{this.USD}}</b-nav-item>
 				<b-nav-item href="#" class="navLink">Send my link</b-nav-item>
 				<b-nav-item-dropdown right>
 					<!-- Using 'button-content' slot -->
@@ -30,7 +29,27 @@
 			</b-collapse>
 		</b-navbar>
 	</div>
-	<router-view></router-view>
+	<div class="row">
+		<div class="col-md-3 leftSidebar">
+			<div class="rate">
+				Exchange rate for today: &nbsp;{{this.USD}}
+			</div>
+			<div class="monthlyIncome">
+				Income for this month: &nbsp;{{}} <br />
+				
+			</div>
+			<div class="monthlyTax">
+				Tax for this month: &nbsp;{{}} <br />
+				
+			</div>
+			<div class="profit">
+				Amount of profit: &nbsp;{{}}
+			</div>
+		</div>
+		<div class="col-md-9 content">
+			<router-view></router-view>
+		</div>
+	</div>
 </div>
 </template>
 
@@ -82,6 +101,27 @@ img {
 
 .navLink {
 	margin: 0 10px;
+}
+
+.leftSidebar {
+	height: 100vh;
+	background-color: #ccc;	
+}
+
+.leftSidebar div {
+	border-bottom: solid 1px #999;
+	line-height: 50px;
+  min-height: 50px;
+  margin: 10px;
+  font-size: 	large;
+}
+
+.content {
+	height: 100vh;
+}
+
+.rate {
+	margin-bottm: 10px;
 }
 
 

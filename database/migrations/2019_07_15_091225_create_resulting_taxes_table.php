@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateUsersTable extends Migration
+class CreateResultingTaxesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,13 @@ class CreateUsersTable extends Migration
      */
     public function up()
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('resulting_taxes', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
-            $table->string('role')->default('user');
-            $table->rememberToken()->nullable();
+            $table->bigInteger('tax_id')->unsigned();
+            $table->bigInteger('user_id')->unsigned();
+            $table->bigInteger('created_by')->unsigned();
+            $table->decimal('amount', 5, 2);
+            $table->date('date');
             $table->timestamps();
             $table->softDeletes();
         });
@@ -33,6 +32,6 @@ class CreateUsersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('resulting_taxes');
     }
 }
