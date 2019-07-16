@@ -14,7 +14,12 @@ class IncomeController extends Controller
      */
     public function index()
     {
-        //
+        $user = auth('api')->user();
+
+        $income = Income::where('user_id', $user->id)->get();
+
+
+        return response()->json($income);
     }
 
     /**
@@ -35,13 +40,34 @@ class IncomeController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $user = auth('api')->user();
+
+        $income = new Income;
+        $income->user_id = $user->id;
+        $income->created_by = $user->id;
+        $income->rate = $request->rate;
+
+        if ($request->currency == 'usd') {
+            $income->currency = $request->currency;
+            $income->amount_usd = $request->amount;
+            $income->amount = $request->amount * $request->rate;
+        } else {
+            $income->currency = 'ua';
+            $income->amount_usd = 0;
+            $income->amount = $request->amount;
+        }
+
+        $income->comment = $request->comment;
+        $income->date = $request->date;
+        $income->save();
+
+        return response()->json(['status' => 'success'], 200);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Income  $income
+     * @param  \App\Model\Income  $income
      * @return \Illuminate\Http\Response
      */
     public function show(Income $income)
@@ -80,6 +106,18 @@ class IncomeController extends Controller
      */
     public function destroy(Income $income)
     {
-        //
+        $income->delete();
+
+        return response()->json(['status' => 'success'], 200);
     }
+
+    public function getAmountOfIncome() 
+    {
+        $user = auth('api')->user();
+
+        $amount = Income::where('user_id', $user->id)->sum('amount');
+
+        return response()->json($amount);
+    }
+    
 }

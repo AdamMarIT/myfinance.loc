@@ -35,10 +35,20 @@
 				Exchange rate for today: &nbsp;{{this.USD}}
 			</div>
 			<div class="monthlyIncome">
-				Income for this month: &nbsp;{{}} <br />
-				
+				Income for this month: &nbsp;{{this.amountIncome}}  &#8372; <br />
 			</div>
 			<div class="monthlyTax">
+				<b-card no-body class="accordion">
+		      <b-card-header header-tag="header" class="p-1" role="tab">
+		        <p v-b-toggle.accordion-1>v</p>
+		      </b-card-header>
+		      <b-collapse id="accordion-1" visible accordion="my-accordion" role="tabpanel">
+		        <b-card-body>
+		          <b-card-text>I start opened because <code>visible</code> is <code>true</code></b-card-text>
+		          <b-card-text>{{ text }}</b-card-text>
+		        </b-card-body>
+		      </b-collapse>
+		    </b-card>
 				Tax for this month: &nbsp;{{}} <br />
 				
 			</div>
@@ -60,23 +70,28 @@ export default {
       return {
         userName: '',
         USD: '',
+        amountIncome: ''
       }
     },
 
   created() {
 			this.$request.get('/api/auth/me')
-      						.then( response=> {
-           					this.userName = String(response.name)
-      						} )
+      		.then( response=> {
+           		this.userName = String(response.name)
+      		})
 
-      let resp = this.$request.get('/api/course')
-      						.then( response=> {
-           					this.USD = '$'+response
-      						} )
-           				
-				 
-        
-		},
+      this.$request.get('/api/course')
+      		.then( response=> {
+           		this.USD = '$'+response
+           		this.$store.commit('setRateUSD', response)
+      		})
+
+      this.$request.get('/api/auth/amountIncome')
+      		.then( response=> {
+           		this.amountIncome = response 	
+
+      		})	    	    
+	},
 
 	methods: {
 	 	logOut() {
@@ -114,6 +129,11 @@ img {
   min-height: 50px;
   margin: 10px;
   font-size: 	large;
+}
+
+.accordion {
+	background-color: inherit;
+	border: inherit;
 }
 
 .content {

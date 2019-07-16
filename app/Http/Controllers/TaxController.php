@@ -14,7 +14,10 @@ class TaxController extends Controller
      */
     public function index()
     {
-        //
+        $user = auth('api')->user();
+        $tax = Tax::where('user_id', $user->id)->get();
+
+        return response()->json($tax);
     }
 
     /**
@@ -35,7 +38,18 @@ class TaxController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $user = auth('api')->user();
+
+        $tax = new Tax;
+        $tax->user_id = $user->id;
+        $tax->created_by = $user->id;
+        $tax->name = $request->name;
+        $tax->amount = $request->amount;
+        $tax->type = $request->type;
+        $tax->periodicity = $request->periodicity;
+        $tax->save();
+
+        return response()->json(['status' => 'success'], 200);
     }
 
     /**
@@ -80,6 +94,10 @@ class TaxController extends Controller
      */
     public function destroy(Tax $tax)
     {
-        //
+        $tax->delete();
+
+        return response()->json(['status' => 'success'], 200);
     }
+
+    
 }

@@ -13,7 +13,7 @@ export default new Vuex.Store({
   plugins: [vuexPersist.plugin],
   state: {
   	accessToken: '',
-  	currentUser : {}
+    rateUSD: '',
   },
   getters: {
   	isAuthenticated: state => !!state.accessToken,
@@ -24,6 +24,9 @@ export default new Vuex.Store({
   mutations: {
   	setAccessToken(state, token) {
       state.accessToken = token;
+    },
+    setRateUSD(state, rate) {
+      state.rateUSD = rate;
     }
   },
   actions: {
