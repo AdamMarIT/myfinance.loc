@@ -64,6 +64,7 @@
 </template>
 
 <script>
+import EventBus from '@/components/event-bus';
 
 export default {
 	data() {
@@ -73,6 +74,12 @@ export default {
         amountIncome: ''
       }
     },
+  mounted () {
+  	let self = this
+    EventBus.$on('COUNT_INCOME',() => {
+      self.getAmountIncome();
+    });
+  },
 
   created() {
 			this.$request.get('/api/auth/me')
@@ -86,18 +93,22 @@ export default {
            		this.$store.commit('setRateUSD', response)
       		})
 
-      this.$request.get('/api/auth/amountIncome')
-      		.then( response=> {
-           		this.amountIncome = response 	
-
-      		})	    	    
+      this.getAmountIncome()
+	    	    
 	},
 
 	methods: {
 	 	logOut() {
 	 		this.$store.commit('setAccessToken', '')
 			this.$router.push("/") 
-	 	}
+	 	},
+	 	getAmountIncome() {
+	 		this.$request.get('/api/auth/amountIncome')
+      		.then( response=> {
+           		this.amountIncome = response 	
+      		})
+	 	},
+
 	}
 }
 	

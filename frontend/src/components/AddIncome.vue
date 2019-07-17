@@ -17,6 +17,8 @@
 </template>
 
 <script>
+  import EventBus from './event-bus';
+
   export default {
  	name: 'AddIncome',
 
@@ -51,6 +53,7 @@
                   this.form.currency = ''
                   this.form.comment = ''
                   this.$emit('add-income');
+                  EventBus.$emit( 'COUNT_INCOME' );
                 }
               })
       
@@ -69,7 +72,7 @@
 
       return this.form.date;
     },
-    
+
   }
 }
 </script>

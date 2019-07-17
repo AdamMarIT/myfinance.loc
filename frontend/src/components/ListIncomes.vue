@@ -48,6 +48,7 @@
 
 <script>
 	import AddIncome from './AddIncome.vue'
+  import EventBus from './event-bus';
 
   export default {
  	name: 'ListIncomes',
@@ -76,6 +77,7 @@
       await this.$request.get("/api/auth/income_delete/"+id)
       .then( response=> {
         this.showIncomes()
+        EventBus.$emit( 'COUNT_INCOME' );
       })
     }
     
