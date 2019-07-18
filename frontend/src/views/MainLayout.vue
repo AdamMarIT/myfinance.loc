@@ -16,7 +16,7 @@
 			</b-navbar-nav>
 			<!-- Right aligned nav items -->
 			<b-navbar-nav class="ml-auto">
-				<b-nav-item href="#" class="navLink">Send my link</b-nav-item>
+				<b-nav-item class="navLink">Send my link</b-nav-item>
 				<b-nav-item-dropdown right>
 					<!-- Using 'button-content' slot -->
 					<template slot="button-content"><em>{{this.userName}}</em></template>
@@ -32,28 +32,30 @@
 	<div class="row">
 		<div class="col-md-3 leftSidebar">
 			<div class="rate">
-				Exchange rate for today: &nbsp;{{this.USD}}
+				Exchange rate for today: &nbsp;{{this.USD}} 
 			</div>
 			<div class="monthlyIncome">
 				Income for this month: &nbsp;{{this.amountIncome}}  &#8372; <br />
 			</div>
 			<div class="monthlyTax">
-				<b-card no-body class="accordion">
-		      <b-card-header header-tag="header" class="p-1" role="tab">
-		        <p v-b-toggle.accordion-1>v</p>
-		      </b-card-header>
-		      <b-collapse id="accordion-1" visible accordion="my-accordion" role="tabpanel">
-		        <b-card-body>
-		          <b-card-text>I start opened because <code>visible</code> is <code>true</code></b-card-text>
-		          <b-card-text>{{ text }}</b-card-text>
-		        </b-card-body>
-		      </b-collapse>
-		    </b-card>
-				Tax for this month: &nbsp;{{}} <br />
-				
+		    <b-button
+		    	block
+		    	variant="light"
+		      :class="showCollapse ? 'collapsed' : null"
+		      :aria-expanded="showCollapse ? 'true' : 'false'"
+		      aria-controls="collapse-4"
+		      @click="showCollapse = !showCollapse"
+		    >
+		      Tax for this month: &nbsp;{{ this.amountTax }} &#8372; <span class="myTab"> &nbsp;</span> <b>&#8595</b>   
+		    </b-button>
+		    <b-collapse id="collapse-4" v-model="showCollapse">
+		      <ul v-for="tax in taxes">
+		      	<li> {{ tax.name }} &nbsp; - &nbsp; {{ tax.amount}} &#8372; </li>
+		      </ul>
+		    </b-collapse>
 			</div>
 			<div class="profit">
-				Amount of profit: &nbsp;{{}}
+				Amount of profit: &nbsp;{{ this.amountIncome - this.amountTax }} &#8372;
 			</div>
 		</div>
 		<div class="col-md-9 content">
@@ -71,7 +73,10 @@ export default {
       return {
         userName: '',
         USD: '',
-        amountIncome: ''
+        amountIncome: '',
+        amountTax: '',
+        taxes: [],
+        showCollapse: true
       }
     },
   mounted () {
@@ -94,6 +99,8 @@ export default {
       		})
 
       this.getAmountIncome()
+      this.getAmountOfTax()
+      this.getListOfTaxes()
 	    	    
 	},
 
@@ -103,9 +110,23 @@ export default {
 			this.$router.push("/") 
 	 	},
 	 	getAmountIncome() {
-	 		this.$request.get('/api/auth/amountIncome')
+	 		this.$request.get('/api/auth/amount_income')
       		.then( response=> {
            		this.amountIncome = response 	
+      		})
+	 	},
+
+	 	getAmountOfTax() {
+	 		this.$request.get('/api/auth/amount_tax')
+      		.then( response=> {
+           		this.amountTax = response 	
+      		})
+	 	},
+
+	 	getListOfTaxes() {
+	 		this.$request.get('/api/auth/list_of_tax')
+      		.then( response=> {
+           		this.taxes = response 	
       		})
 	 	},
 
@@ -115,6 +136,10 @@ export default {
 </script>
 
 <style scoped>
+
+.myTab {
+	margin: 0 7%;
+}
 
 .bgBlue {
 	background-color: #14395e;
@@ -139,12 +164,26 @@ img {
 	line-height: 50px;
   min-height: 50px;
   margin: 10px;
-  font-size: 	large;
+  text-align: left;
+  text-indent: 2em;
 }
 
-.accordion {
+#collapse-4 {
+	border: none;
+}
+
+.monthlyTax>button {
 	background-color: inherit;
-	border: inherit;
+	border: none;
+	color: inherit;
+	text-align: inherit;
+	text-indent: 1em;
+}
+
+li {
+	line-height: 25px;
+	text-align: left;
+	margin-left: 15%;
 }
 
 .content {

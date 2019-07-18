@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Tax;
-use Illuminate\Http\Request;
+use Illuminate\Http\Request;  
+use Carbon\Carbon; 
+use App\Models\Income;
 
 class TaxController extends Controller
 {
@@ -38,18 +40,24 @@ class TaxController extends Controller
      */
     public function store(Request $request)
     {
-        $user = auth('api')->user();
+        if ($request->isMethod('post')) {
+            $user = auth('api')->user();
 
-        $tax = new Tax;
-        $tax->user_id = $user->id;
-        $tax->created_by = $user->id;
-        $tax->name = $request->name;
-        $tax->amount = $request->amount;
-        $tax->type = $request->type;
-        $tax->periodicity = $request->periodicity;
-        $tax->save();
+            $tax = new Tax;
+            $tax->user_id = $user->id;
+            $tax->created_by = $user->id;
+            $tax->name = $request->name;
+            $tax->amount = $request->amount;
+            $tax->type = $request->type;
+            $tax->periodicity = $request->periodicity;
 
-        return response()->json(['status' => 'success'], 200);
+            if ($request->periodicity == 'month' || $request->periodicity == 'quarter'  || $request->periodicity == 'year' ) {
+                $tax->active = 1;
+            }
+            $tax->save();
+
+            return response()->json(['status' => 'success'], 200);
+        }
     }
 
     /**
@@ -99,5 +107,59 @@ class TaxController extends Controller
         return response()->json(['status' => 'success'], 200);
     }
 
+    public function getAmountOfTax() 
+    {
+        $user = auth('api')->user();
+
+        $taxes = Tax::where('user_id', $user->id)
+                    ->where('active', '1')
+                    ->orwhere('created_at', '>=', Carbon::now()->startOfMonth())
+                    ->get()
+                    ->toArray();
+
+        $amount = 0;
+
+        foreach ($taxes as $tax) {
+
+            if ($tax['type'] == 'fixed') {
+                $amount += $tax['amount'];     
+            }else {
+                $amountIncome = Income::where('user_id', $user->id)->sum('amount');
+                $amount += $amountIncome * $tax['amount'] / 100;
+            }
+        }
+
+        return response()->json($amount);
+    }
     
+
+    public function getTaxForSidebar()
+    {
+        $user = auth('api')->user();
+        
+        $taxes = Tax::where('user_id', $user->id)
+                    ->where('active', '1')
+                    ->orwhere('created_at', '>=', Carbon::now()->startOfMonth())
+                    ->orderBy('created_at')
+                    ->get()
+                    ->toArray();
+
+        $taxesArr = [];
+
+        foreach ($taxes as $tax) {
+
+            if ($tax['type'] == 'fixed') {
+                $amount = $tax['amount'];     
+            }else {
+                $amountIncome = Income::where('user_id', $user->id)->sum('amount');
+                $amount = $amountIncome * $tax['amount'] / 100;
+            }
+
+            $taxesArr[] = ['name' => $tax['name'], 'amount' => $amount];
+        }
+
+        return response()->json($taxesArr);
+    }
+
+
 }
