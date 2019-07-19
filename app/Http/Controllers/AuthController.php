@@ -8,10 +8,12 @@ use Illuminate\Support\Facades\Validator;
 use App\Models\User;
 use JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
+use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
+use Illuminate\Foundation\Auth\ResetsPasswords;
 
 class AuthController extends Controller
 {
-
+    use SendsPasswordResetEmails;
     /**
      * Get a JWT via given credentials.
      *
@@ -111,6 +113,13 @@ class AuthController extends Controller
         $user->password = bcrypt($request->password);
         $user->save();
         return response()->json(['status' => 'success'], 200);
+    }
+
+    public function forgot(Request $request)
+    {
+        $response = $this->sendResetLinkEmail($request);
+        dd($response);
+        return; 
     }
 
 }

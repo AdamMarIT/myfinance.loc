@@ -9,7 +9,7 @@
           <option value="fixed">fixed</option>
           <option value="percent">%</option>
         </select>
-        <input class="form-control mb-2 mr-sm-2 mb-sm-2" type="text"  v-model='form.amount' placeholder="Amount">
+        <input class="form-control mb-2 mr-sm-2 mb-sm-2" type="text"  v-model='form.amount' placeholder="Amount in UAN">
         <select class="form-control mb-2 mr-sm-2 mb-sm-2"  v-model='form.periodicity'>
           <option value="">only this month</option>
           <option value="month">month</option>

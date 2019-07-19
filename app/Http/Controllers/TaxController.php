@@ -91,7 +91,19 @@ class TaxController extends Controller
      */
     public function update(Request $request, Tax $tax)
     {
-        //
+        if ($request->isMethod('post')) {
+            $tax->name = $request->name;
+            $tax->amount = $request->amount;
+            $tax->type = $request->type;
+            $tax->periodicity = $request->periodicity;
+
+            if ($request->periodicity == 'month' || $request->periodicity == 'quarter'  || $request->periodicity == 'year' ) {
+                $tax->active = 1;
+            }
+            $tax->update();
+            
+            return response()->json(['status' => 'success'], 200);
+        }
     }
 
     /**

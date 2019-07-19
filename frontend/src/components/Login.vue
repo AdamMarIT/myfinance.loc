@@ -6,7 +6,7 @@
 				<b-form>
 					<p v-if="error" class="error">
 				    Invalid data entered
-				  </p>
+				  	</p>
 					<b-form-group id="input-group-1" label-for="input-1">
 						<b-form-input
 							id="input-1"
@@ -53,12 +53,12 @@
         })
         let token = response.access_token;
 	        if (token) {
-						this.$store.commit('setAccessToken', token)
-						this.$router.push("dashboard")
-					} else {
-						this.error = true;
-						setTimeout(() => this.error = false, 2000);
-					}
+				this.$store.commit('setAccessToken', token)
+				this.$router.push("dashboard")
+			} else {
+				this.error = true;
+				setTimeout(() => this.error = false, 2000);
+			}
       	},
 			
 		}

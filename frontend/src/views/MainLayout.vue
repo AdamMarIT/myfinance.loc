@@ -12,7 +12,8 @@
 				<b-nav-item class="navLink">
 					<router-link to="/dashboard/main">Current month</router-link>
 				</b-nav-item>
-				<b-nav-item href="#" class="navLink">Reports</b-nav-item>
+				<b-nav-item class="navLink">
+					<router-link to="/dashboard/files">Files</router-link></b-nav-item>
 			</b-navbar-nav>
 			<!-- Right aligned nav items -->
 			<b-navbar-nav class="ml-auto">
@@ -83,6 +84,10 @@ export default {
   	let self = this
     EventBus.$on('COUNT_INCOME',() => {
       self.getAmountIncome();
+    });
+    EventBus.$on('CHANGE_TAX',() => {
+      self.getAmountOfTax();
+      self.getListOfTaxes();
     });
   },
 

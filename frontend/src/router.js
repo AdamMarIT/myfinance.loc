@@ -5,7 +5,7 @@ import Registration from './views/Registration.vue'
 import Dashboard from './views/Dashboard.vue'
 import MainLayout from './views/MainLayout.vue'
 import Profile from './views/Profile.vue'
-import Report from './views/Report.vue'
+import Files from './views/Files.vue'
 
 Vue.use(Router)
 
@@ -21,6 +21,11 @@ let dashboardMenu = {
           component: Dashboard
         },
         {
+          path: 'files',
+          name: 'Files',
+          component: Files
+        },
+        {
           path: 'profile',
           name: 'Profile',
           component: Profile
@@ -33,20 +38,6 @@ let dashboardMenu = {
       ]  
 }
 
-let reportMenu = {
-  path: '/report',
-      name: 'report',
-      component: MainLayout,
-      redirect: '/report/month',
-      children: [
-        {
-          path: 'month',
-          name: 'reportMain',
-          component: Report
-        },
-
-      ]  
-}
 
 export default new Router({
   mode: 'history',
@@ -63,7 +54,7 @@ export default new Router({
       component: Registration
     },
     dashboardMenu,   
-    reportMenu,
+
     {
       path: '*', 
       redirect: '/dashboard/main'
