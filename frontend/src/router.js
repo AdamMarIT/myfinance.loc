@@ -6,6 +6,7 @@ import Dashboard from './views/Dashboard.vue'
 import MainLayout from './views/MainLayout.vue'
 import Profile from './views/Profile.vue'
 import Files from './views/Files.vue'
+import ResetPasswordForm from './views/ResetPasswordForm.vue'
 
 Vue.use(Router)
 
@@ -52,6 +53,11 @@ export default new Router({
       path: '/registration',
       name: 'registration',
       component: Registration
+    },
+    { 
+      path: '/reset-password/:token', 
+      name: 'reset-password-form', 
+      component: ResetPasswordForm, 
     },
     dashboardMenu,   
 

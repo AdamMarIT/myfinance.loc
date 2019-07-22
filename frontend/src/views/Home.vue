@@ -10,46 +10,25 @@
       <router-link to="/registration"><b-button>Registration</b-button></router-link>
       <Login v-if="show"></Login> 
       <b-button v-if="show" variant="link" @click="fogotPassword">oh?</b-button>
-      <div class="container">
-        <div class="row justify-content-center">
-          <div class="col-md-4 form" v-if="forgot">
-            <b-form>
-              <p v-if="error" class="error">
-                Invalid email entered
-                </p>
-              <b-form-group id="input-group-1" label-for="input-1">
-                <b-form-input
-                  id="input-1"
-                  v-model="email"
-                  type="email"
-                  required
-                  placeholder="Enter your email for reset password"
-                  @keyup.enter="onSubmit"
-                ></b-form-input>
-              </b-form-group>
-              <b-button @click="onSubmit">Submit</b-button>
-            </b-form>
-          </div>
-        </div>
-      </div>
+      <ForgotPassword v-if="forgot"></ForgotPassword>
     </div>
   </div>
 </template>
 
 <script>
 import Login from '@/components/Login.vue'
+import ForgotPassword from '@/components/ForgotPassword.vue'
 
 export default {
   components: {
-    Login
+    Login,
+    ForgotPassword
   },
   
   data(){
     return {
       show: false,
       forgot: false,
-      email: '',
-      error: false
     }
   },
 
@@ -58,16 +37,6 @@ export default {
       this.show = false;
       this.forgot = true;
     },
-
-    async onSubmit() {
-        let response = await this.$request.post('/api/forgot', {
-          email: this.email,
-        })
-             .then( response=> {
-                console.log(response)
-              })
-    }
-
   }
 
 }

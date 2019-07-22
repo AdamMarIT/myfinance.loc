@@ -41,3 +41,5 @@ Route::post('login', 'AuthController@login');
 Route::post('/registration', 'AuthController@register')->name('registration');
 Route::get('course', 'ExchangeController@getCurrentСourse');
 Route::post('forgot', 'AuthController@forgot');
+Route::post('reset-password', 'AuthController@forgot');
+Route::post('reset/password', 'AuthController@callResetPassword');

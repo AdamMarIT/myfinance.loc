@@ -1,5 +1,5 @@
 <template>
-<div class="registration">
+<div class="login">
 	<div class="container">
 		<div class="row justify-content-center">
 			<div class="col-md-4 form">
