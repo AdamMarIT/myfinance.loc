@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Income;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 class IncomeController extends Controller
 {
@@ -15,21 +16,11 @@ class IncomeController extends Controller
     public function index()
     {
         $user = auth('api')->user();
-
-        $income = Income::where('user_id', $user->id)->get();
-
+        $income = Income::where('user_id', $user->id)
+                        ->where('created_at', '>=', Carbon::now()->startOfMonth())
+                        ->get();
 
         return response()->json($income);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
     }
 
     /**
@@ -40,52 +31,29 @@ class IncomeController extends Controller
      */
     public function store(Request $request)
     {
-        if ($request->isMethod('post')) {
-            $user = auth('api')->user();
+        $user = auth('api')->user();
 
-            $income = new Income;
-            $income->user_id = $user->id;
-            $income->created_by = $user->id;
-            $income->rate = $request->rate;
+        $income = new Income;
 
-            if ($request->currency == 'usd') {
-                $income->currency = $request->currency;
-                $income->amount_usd = $request->amount;
-                $income->amount = $request->amount * $request->rate;
-            } else {
-                $income->currency = 'ua';
-                $income->amount_usd = 0;
-                $income->amount = $request->amount;
-            }
+        $income->user_id = $user->id;
+        $income->created_by = $user->id;
+        $income->rate = $request->rate;
 
-            $income->comment = $request->comment;
-            $income->date = $request->date;
-            $income->save();
-
-            return response()->json(['status' => 'success'], 200);
+        if ($request->currency == 'usd') {
+            $income->currency = $request->currency;
+            $income->amount_usd = $request->amount;
+            $income->amount = $request->amount * $request->rate;
+        } else {
+            $income->currency = 'ua';
+            $income->amount_usd = 0;
+            $income->amount = $request->amount;
         }
-    }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Model\Income  $income
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Income $income)
-    {
-        //
-    }
+        $income->comment = $request->comment;
+        $income->date = $request->date;
+        $income->save();
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Income  $income
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Income $income)
-    {
-        //
+        return response()->json(['status' => 'success'], 200);  
     }
 
     /**
@@ -97,25 +65,23 @@ class IncomeController extends Controller
      */
     public function update(Request $request, Income $income)
     {
-        if ($request->isMethod('post')) {
-            $income->rate = $request->rate;
-            if ($request->currency == 'usd') {
-                $income->currency = $request->currency;
-                $income->amount_usd = $request->amount;
-                $income->amount = $request->amount * $request->rate;
-            } else {
-                $income->currency = 'ua';
-                $income->amount_usd = 0;
-                $income->amount = $request->amount;
-            }
+        $income->rate = $request->rate;
 
-            $income->comment = $request->comment;
-            $income->date = $request->date;
-            $income->update();
-
-            return response()->json(['status' => 'success'], 200);
+        if ($request->currency == 'usd') {
+            $income->currency = $request->currency;
+            $income->amount_usd = $request->amount;
+            $income->amount = $request->amount * $request->rate;
+        } else {
+            $income->currency = 'ua';
+            $income->amount_usd = 0;
+            $income->amount = $request->amount;
         }
 
+        $income->comment = $request->comment;
+        $income->date = $request->date;
+        $income->update();
+
+        return response()->json(['status' => 'success'], 200);
     }
 
     /**
@@ -131,11 +97,12 @@ class IncomeController extends Controller
         return response()->json(['status' => 'success'], 200);
     }
 
-    public function getAmountOfIncome() 
+    public function getIncomeAmount() 
     {
         $user = auth('api')->user();
-
-        $amount = Income::where('user_id', $user->id)->sum('amount');
+        $amount = Income::where('user_id', $user->id)
+                        ->where('created_at', '>=', Carbon::now()->startOfMonth())
+                        ->sum('amount');
 
         return response()->json($amount);
     }

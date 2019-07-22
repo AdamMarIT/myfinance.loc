@@ -53,7 +53,8 @@
                   this.form.currency = ''
                   this.form.comment = ''
                   this.$emit('add-income');
-                  EventBus.$emit( 'COUNT_INCOME' );
+                  EventBus.$emit('COUNT_INCOME');
+                  EventBus.$emit('CHANGE_TAX');
                 }
               })
       

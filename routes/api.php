@@ -24,7 +24,7 @@ Route::group([
     Route::get('me', 'AuthController@me');
     Route::post('income_add', 'IncomeController@store');
     Route::get('income_index', 'IncomeController@index');
-    Route::get('amount_income', 'IncomeController@getAmountOfIncome');
+    Route::get('amount_income', 'IncomeController@getIncomeAmount');
     Route::post('income_update/{income}', 'IncomeController@update');
     Route::get('income_delete/{income}', 'IncomeController@destroy');
     Route::post('tax_create', 'TaxController@store');
@@ -32,12 +32,12 @@ Route::group([
     Route::get('list_of_tax', 'TaxController@getTaxForSidebar');
     Route::post('tax_update/{tax}', 'TaxController@update');
     Route::get('tax_delete/{tax}', 'TaxController@destroy');
-    Route::get('amount_tax', 'TaxController@getAmountOfTax');
+    Route::get('amount_tax', 'TaxController@getTaxAmount');
 
 
 });
 
 Route::post('login', 'AuthController@login');
 Route::post('/registration', 'AuthController@register')->name('registration');
-Route::get('course', 'DollarController@currentСourse');
+Route::get('course', 'ExchangeController@getCurrentСourse');
 Route::post('forgot', 'AuthController@forgot');

@@ -13,7 +13,7 @@
 					<router-link to="/dashboard/main">Current month</router-link>
 				</b-nav-item>
 				<b-nav-item class="navLink">
-					<router-link to="/dashboard/files">Files</router-link></b-nav-item>
+					<router-link to="/dashboard/files">My files</router-link></b-nav-item>
 			</b-navbar-nav>
 			<!-- Right aligned nav items -->
 			<b-navbar-nav class="ml-auto">

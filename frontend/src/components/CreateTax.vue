@@ -52,6 +52,7 @@
                   this.form.type = ''
                   this.form.periodicity = ''
                   this.$emit('add-tax');
+                  EventBus.$emit('CHANGE_TAX');
                 }
               })
       

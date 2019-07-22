@@ -24,6 +24,7 @@
                   type="email"
                   required
                   placeholder="Enter your email for reset password"
+                  @keyup.enter="onSubmit"
                 ></b-form-input>
               </b-form-group>
               <b-button @click="onSubmit">Submit</b-button>

@@ -21,7 +21,8 @@
 							id="password" 
 							v-model="form.password" 
 							type="password"
-							required placeholder="Enter your password" @keyup.enter="onSubmit">
+							required placeholder="Enter your password" 
+							@keyup.enter="onSubmit">
 						</b-form-input>
 					</b-form-group>
 					<b-button @click="onSubmit">Submit</b-button>

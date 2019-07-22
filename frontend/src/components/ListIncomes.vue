@@ -28,12 +28,12 @@
             <div>{{ index + 1}}</div>
           </td>
           <td>
-            <b-form-input type="date" :readonly="income.inputDisable == true" v-bind:class="{ inputDisable: income.inputDisable }" v-model='income.date'></b-form-input>
+            <b-form-input type="date" :readonly="income.inputDisable == true" v-bind:class="{ inputDisable: income.inputDisable }" v-model='income.date' @keyup.enter="updateIncome(income)"></b-form-input>
           </td>
           <td >
             <div class="minWidth30">
               <div>
-                <b-form-input type="text" :readonly="income.inputDisable == true" v-bind:class="{ inputDisable: income.inputDisable }" v-model='income.amount'></b-form-input>
+                <b-form-input type="text" :readonly="income.inputDisable == true" v-bind:class="{ inputDisable: income.inputDisable }" v-model='income.amount' @keyup.enter="updateIncome(income)"></b-form-input>
               </div>
               <div v-show="income.edit">
                 <select class="form-control"  v-model='income.currency'>
@@ -44,10 +44,10 @@
             </div>
           </td>
           <td>
-            <b-form-input type="text" class="rate" :readonly="income.inputDisable == true" v-bind:class="{ inputDisable: income.inputDisable }" v-model='income.rate'></b-form-input>
+            <b-form-input type="text" class="rate" :readonly="income.inputDisable == true" v-bind:class="{ inputDisable: income.inputDisable }" v-model='income.rate' @keyup.enter="updateIncome(income)"></b-form-input>
           </td>
           <td>
-            <b-form-input type="text" :readonly="income.inputDisable == true" v-bind:class="{ inputDisable: income.inputDisable }" v-model='income.comment'></b-form-input>
+            <b-form-input type="text" :readonly="income.inputDisable == true" v-bind:class="{ inputDisable: income.inputDisable }" v-model='income.comment' @keyup.enter="updateIncome(income)"></b-form-input>
           </td>
           <td>
             <div v-show="income.edit"><b-button v-on:click="updateIncome(income)">OK</b-button></div>
@@ -99,7 +99,8 @@
       await this.$request.get("/api/auth/income_delete/"+id)
       .then( response=> {
         this.showIncomes()
-        EventBus.$emit( 'COUNT_INCOME' );
+        EventBus.$emit('COUNT_INCOME');
+        EventBus.$emit('CHANGE_TAX');
       })
     },
 
@@ -124,7 +125,8 @@
                   income.edit = false
                   income.inputDisable = true
                   this.showIncomes();
-                  EventBus.$emit( 'COUNT_INCOME' );  
+                  EventBus.$emit('COUNT_INCOME'); 
+                  EventBus.$emit('CHANGE_TAX'); 
                 }
               })
             },

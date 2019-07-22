@@ -20,7 +20,7 @@
             <div>{{ index + 1}}</div>
           </td>
           <td>
-            <b-form-input type="text" :readonly="tax.inputDisable == true" v-bind:class="{ inputDisable: tax.inputDisable }" v-model='tax.name'></b-form-input>
+            <b-form-input type="text" :readonly="tax.inputDisable == true" v-bind:class="{ inputDisable: tax.inputDisable }" v-model='tax.name' @keyup.enter="updateTax(tax)"></b-form-input>
           </td>
           <td>
             <div v-show="tax.inputDisable == true">{{ tax.type }}</div>
@@ -32,7 +32,7 @@
             </div>
           </td>
           <td>
-            <b-form-input type="text" :readonly="tax.inputDisable == true" v-bind:class="{ inputDisable: tax.inputDisable }" v-model='tax.amount'></b-form-input>
+            <b-form-input type="text" :readonly="tax.inputDisable == true" v-bind:class="{ inputDisable: tax.inputDisable }" v-model='tax.amount' @keyup.enter="updateTax(tax)"></b-form-input>
           </td>
           <td>
             <div v-show="tax.inputDisable == true">{{ tax.periodicity }}</div>
@@ -100,6 +100,7 @@
       await this.$request.get("/api/auth/tax_delete/"+id)
       .then( response=> {
         this.showTaxes()
+        EventBus.$emit('CHANGE_TAX');
       })
     },
 
@@ -120,7 +121,7 @@
                   tax.edit = false
                   tax.inputDisable = true
                   this.showTaxes();
-                  EventBus.$emit( 'CHANGE_TAX' );                    
+                  EventBus.$emit('CHANGE_TAX');                    
                 }
               })
     },
