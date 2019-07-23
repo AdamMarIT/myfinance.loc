@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\File;
+use App\Models\UserFile;
 use Illuminate\Http\Request;
 
-class FileController extends Controller
+class UserFileController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,7 +14,15 @@ class FileController extends Controller
      */
     public function index()
     {
-        //
+        $user = auth('api')->user();
+        $userFiles = UserFile::where('user_id', $user->id)->get()->toArray();
+        $filesArr = [];
+
+        foreach ($userFiles as $userFile) {
+            $filesArr[] = ['id' => $userFile['id'], 'name' => $userFile['name'], 'date' => date('d.m.Y', strtotime($userFile['created_at']))];
+        }
+
+        return response()->json($filesArr);
     }
 
     /**
@@ -28,12 +36,12 @@ class FileController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * upload file in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function upload(Request $request)
     {
         //
     }

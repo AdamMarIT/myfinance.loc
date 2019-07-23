@@ -33,6 +33,9 @@ Route::group([
     Route::post('tax_update/{tax}', 'TaxController@update');
     Route::get('tax_delete/{tax}', 'TaxController@destroy');
     Route::get('amount_tax', 'TaxController@getTaxAmount');
+    Route::post('upload', 'UserFileController@upload');
+    Route::get('file_index', 'UserFileController@index');
+    Route::post('file_upload', 'UserFileController@upload');
 
 
 });

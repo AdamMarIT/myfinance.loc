@@ -76,8 +76,8 @@
         
         if (isChecked) {
         	let currentObj = this;
-        	let res = this.$request.post('/api/reset/password/', {
-              	token: this.$route.params.token,
+        	let res = this.$request.post('/api/reset/password', {
+            token: this.$route.params.token,
 		        email: this.form.email,
 		        password: this.form.password,
 		        password_confirmation: this.form.confirmPassword

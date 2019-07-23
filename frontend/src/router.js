@@ -57,7 +57,8 @@ export default new Router({
     { 
       path: '/reset-password/:token', 
       name: 'reset-password-form', 
-      component: ResetPasswordForm, 
+      component: ResetPasswordForm,
+      props: true 
     },
     dashboardMenu,   
 

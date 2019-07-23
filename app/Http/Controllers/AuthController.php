@@ -11,6 +11,7 @@ use Tymon\JWTAuth\Exceptions\JWTException;
 use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
 use Illuminate\Foundation\Auth\ResetsPasswords;
 use Illuminate\Auth\Events\PasswordReset;
+use Illuminate\Support\Facades\Password;
 
 class AuthController extends Controller
 {
@@ -147,7 +148,19 @@ class AuthController extends Controller
      */
     public function callResetPassword(Request $request)
     {
-        return $this->reset($request);
+        $credentials = $request->only(
+            'email', 'password', 'password_confirmation', 'token'
+        );
+
+        $response = $this->broker()->reset($credentials, function ($user, $password) {
+            $this->resetPassword($user, $password);
+        });
+       
+        return $response == Password::PASSWORD_RESET
+                    ? $this->sendResetResponse($request, $response)
+                    : $this->sendResetFailedResponse($request, $response);
+       
+
     }
 
     /**
