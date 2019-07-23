@@ -40,6 +40,7 @@
       	let response = await this.$request.post('/api/reset-password', {
          	email: this.email,
         })
+      
       },
 			
 		}
