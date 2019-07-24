@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\UserFile;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Hash;
 
 class UserFileController extends Controller
 {
@@ -19,20 +21,15 @@ class UserFileController extends Controller
         $filesArr = [];
 
         foreach ($userFiles as $userFile) {
-            $filesArr[] = ['id' => $userFile['id'], 'name' => $userFile['name'], 'date' => date('d.m.Y', strtotime($userFile['created_at']))];
+            $filesArr[] = [
+                'id' => $userFile['id'], 
+                'name' => $userFile['name'], 
+                'date' => date('d.m.Y', strtotime($userFile['created_at'])),
+                'link' => $userFile['file_link'],
+            ];
         }
 
         return response()->json($filesArr);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
     }
 
     /**
@@ -43,41 +40,54 @@ class UserFileController extends Controller
      */
     public function upload(Request $request)
     {
-        //
+        $file = $request->file('file');
+
+        if (!$file) {
+            return response()->json(['error' => 'No file'], 400);
+        } 
+
+        if($file->getSize() > '100000'){
+            return response()->json(['error' => 'File max 100Mb'], 500);
+        }
+
+        $disk = Storage::disk('local');
+        $user = auth('api')->user();
+        $name =  $file->getClientOriginalName();
+        $path = sha1($user->id.$name);
+        
+        if (UserFile::where('name', '=', $name)->exists()) {
+            return response()->json(['error' => 'File exists'], 401);
+        } 
+
+        $userFile = $this->saveUserFile($file, $user->id, $name, $path);
+        $disk->put(
+            'uploads/'.$path,
+            file_get_contents($file->getRealPath())
+        );
+
+        return response()->json(['status' => 'success'], 200); 
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\File  $file
-     * @return \Illuminate\Http\Response
-     */
-    public function show(File $file)
-    {
-        //
+    public function saveUserFile($file, $userId, $name, $path) {
+        $userFile = new UserFile;
+
+        $userFile->file_link = $path;
+        $userFile->name = $name;
+        $userFile->user_id = $userId;
+        $userFile->save();
+
+        return true;
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\File  $file
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(File $file)
+    public function download(UserFile $file, $hash)
     {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\File  $file
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, File $file)
-    {
-        //
+        if ($hash == $file->file_link) {
+            $path = storage_path('app/uploads/'.$file->file_link);
+            $name = $file->name;
+         
+            return response()->download($path, $name);  
+        }
+        
     }
 
     /**
@@ -86,8 +96,11 @@ class UserFileController extends Controller
      * @param  \App\File  $file
      * @return \Illuminate\Http\Response
      */
-    public function destroy(File $file)
+    public function destroy(UserFile $file)
     {
-        //
+        Storage::delete($file->file_link);
+        $file->delete();
+
+        return response()->json(['status' => 'success'], 200);
     }
 }

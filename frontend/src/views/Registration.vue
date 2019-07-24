@@ -89,7 +89,7 @@
         		.then(function (response) {
         			if (response.status == 'error') {
                     currentObj.errors.push('The email has already been taken')
-              } else {
+              		} else {
         				currentObj.$router.push("/")
         			}
         		})

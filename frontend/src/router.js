@@ -7,6 +7,7 @@ import MainLayout from './views/MainLayout.vue'
 import Profile from './views/Profile.vue'
 import Files from './views/Files.vue'
 import ResetPasswordForm from './views/ResetPasswordForm.vue'
+import Reports from './views/Reports.vue'
 
 Vue.use(Router)
 
@@ -25,6 +26,11 @@ let dashboardMenu = {
           path: 'files',
           name: 'Files',
           component: Files
+        },
+        {
+          path: 'reports',
+          name: 'Reports',
+          component: Reports
         },
         {
           path: 'profile',

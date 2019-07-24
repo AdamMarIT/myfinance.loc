@@ -33,9 +33,10 @@ Route::group([
     Route::post('tax_update/{tax}', 'TaxController@update');
     Route::get('tax_delete/{tax}', 'TaxController@destroy');
     Route::get('amount_tax', 'TaxController@getTaxAmount');
-    Route::post('upload', 'UserFileController@upload');
     Route::get('file_index', 'UserFileController@index');
     Route::post('file_upload', 'UserFileController@upload');
+    Route::get('file_delete/{file}', 'UserFileController@destroy');
+
 
 
 });
@@ -46,3 +47,4 @@ Route::get('course', 'ExchangeController@getCurrentСourse');
 Route::post('forgot', 'AuthController@forgot');
 Route::post('reset-password', 'AuthController@forgot');
 Route::post('reset/password', 'AuthController@callResetPassword');
+Route::get('file_download/{file}/{hash}', 'UserFileController@download');

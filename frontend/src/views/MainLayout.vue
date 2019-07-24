@@ -13,11 +13,15 @@
 					<router-link to="/dashboard/main">Current month</router-link>
 				</b-nav-item>
 				<b-nav-item class="navLink">
-					<router-link to="/dashboard/files">My files</router-link></b-nav-item>
+					<router-link to="/dashboard/files">My files</router-link>
+				</b-nav-item>
+				<b-nav-item class="navLink">
+					<router-link to="/dashboard/reports">Reports</router-link>
+				</b-nav-item>
 			</b-navbar-nav>
 			<!-- Right aligned nav items -->
 			<b-navbar-nav class="ml-auto">
-				<b-nav-item class="navLink">Send my link</b-nav-item>
+				<b-nav-item class="navLink"><router-link to="#">Send my link</router-link></b-nav-item>
 				<b-nav-item-dropdown right>
 					<!-- Using 'button-content' slot -->
 					<template slot="button-content"><em>{{this.userName}}</em></template>
@@ -30,7 +34,7 @@
 			</b-collapse>
 		</b-navbar>
 	</div>
-	<div class="row">
+	<div class="row margin">
 		<div class="col-md-3 leftSidebar">
 			<div class="rate">
 				Exchange rate for today: &nbsp;{{this.USD}} 
@@ -50,7 +54,7 @@
 		      Tax for this month: &nbsp;{{ this.amountTax }} &#8372; <span class="myTab"> &nbsp;</span> <b>&#8595</b>   
 		    </b-button>
 		    <b-collapse id="collapse-4" v-model="showCollapse">
-		      <ul v-for="tax in taxes">
+		      <ul v-for="tax in taxes" class="list">
 		      	<li> {{ tax.name }} &nbsp; - &nbsp; {{ tax.amount}} &#8372; </li>
 		      </ul>
 		    </b-collapse>
@@ -92,7 +96,7 @@ export default {
   },
 
   created() {
-			this.$request.get('/api/auth/me')
+	  this.$request.get('/api/auth/me')
       		.then( response=> {
            		this.userName = String(response.name)
       		})
@@ -102,11 +106,9 @@ export default {
            		this.USD = '$'+response
            		this.$store.commit('setRateUSD', response)
       		})
-
       this.getAmountIncome()
       this.getAmountOfTax()
-      this.getListOfTaxes()
-	    	    
+      this.getListOfTaxes()	    	    
 	},
 
 	methods: {
@@ -160,7 +162,7 @@ img {
 }
 
 .leftSidebar {
-	height: 100vh;
+	min-height: 100vh;
 	background-color: #ccc;	
 }
 
@@ -185,20 +187,22 @@ img {
 	text-indent: 1em;
 }
 
-li {
+.list>li {
 	line-height: 25px;
 	text-align: left;
 	margin-left: 15%;
 }
 
 .content {
-	height: 100vh;
+	min-height: 100vh;
 }
 
 .rate {
 	margin-bottm: 10px;
 }
 
-
+.margin {
+	margin: 0 !important;
+}
 
 </style>

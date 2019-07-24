@@ -1,9 +1,6 @@
 <template>
   <div class="dashboard">
 	  <b-tabs>
-	    <!-- <b-tab title="An accountant's ledger" active class="listcard">
-	    	<div><List> </List></div>
-	    </b-tab> -->
 	    <b-tab title="Income" class="listcard">
 	    	<div><ListIncomes></ListIncomes></div>
 	    </b-tab>

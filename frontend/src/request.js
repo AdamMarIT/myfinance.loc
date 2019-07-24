@@ -5,12 +5,8 @@ let baseURL = 'http://localhost:8080'
 
 async function getRequest(url, method, data = {}) {
   let fetchUrl = baseURL + url
-  
-  let headers = {
-    'Content-Type': 'application/json',
-  }
-
   const token = store.getters.getAccessToken;
+  let headers = {}
 
   if (token) {
     headers = {
@@ -20,8 +16,18 @@ async function getRequest(url, method, data = {}) {
   }
 
   let postData = null
+  
   if (data) {
-    postData = data.isFile ? data : JSON.stringify(data)
+
+    if (data.isFile) {
+      postData = data.file 
+    } else {
+      postData = JSON.stringify(data)
+      headers = {
+        'Content-Type': 'application/json',
+        ...headers
+      }
+    } 
   }
 
   // Значения по умолчанию обозначены знаком *
