@@ -6,7 +6,7 @@
         <b-form-input class="mb-2 mr-sm-2 mb-sm-2" id="date" type="date" v-model='form.date'></b-form-input>
         <input class="form-control mb-2 mr-sm-2 mb-sm-2" type="text"  v-model='form.amount' placeholder="Amount">
         <select class="form-control mb-2 mr-sm-2 mb-sm-2"  v-model='form.currency' id="inline-form-custom-select-pref">
-          <option value="">UA</option>
+          <option value="ua">UA</option>
           <option value="usd">$</option>
         </select>
         <input class="form-control mb-2 mr-sm-2 mb-sm-2" type="text"  v-model='form.comment' placeholder="Comment">

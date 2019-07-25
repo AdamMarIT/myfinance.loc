@@ -17,7 +17,8 @@ class IncomeController extends Controller
     {
         $user = auth('api')->user();
         $income = Income::where('user_id', $user->id)
-                        ->where('created_at', '>=', Carbon::now()->startOfMonth())
+                        ->where('date', '>=', Carbon::now()->startOfMonth())
+                        ->orderBy('date')
                         ->get();
 
         return response()->json($income);
@@ -38,19 +39,11 @@ class IncomeController extends Controller
         $income->user_id = $user->id;
         $income->created_by = $user->id;
         $income->rate = $request->rate;
-
-        if ($request->currency == 'usd') {
-            $income->currency = $request->currency;
-            $income->amount_usd = $request->amount;
-            $income->amount = $request->amount * $request->rate;
-        } else {
-            $income->currency = 'ua';
-            $income->amount_usd = 0;
-            $income->amount = $request->amount;
-        }
-
+        $income->currency = $request->currency;
+        $income->amount_usd = $request->amount;
+        $income->amount = $request->amount;
         $income->comment = $request->comment;
-        $income->date = $request->date;
+        $income->date = $this->isThisMonth($request->date);
         $income->save();
 
         return response()->json(['status' => 'success'], 200);  
@@ -66,19 +59,11 @@ class IncomeController extends Controller
     public function update(Request $request, Income $income)
     {
         $income->rate = $request->rate;
-
-        if ($request->currency == 'usd') {
-            $income->currency = $request->currency;
-            $income->amount_usd = $request->amount;
-            $income->amount = $request->amount * $request->rate;
-        } else {
-            $income->currency = 'ua';
-            $income->amount_usd = 0;
-            $income->amount = $request->amount;
-        }
-
+        $income->currency = $request->currency;
+        $income->amount_usd = $request->amount;
+        $income->amount = $request->amount;
         $income->comment = $request->comment;
-        $income->date = $request->date;
+        $income->date = $this->isThisMonth($request->date);
         $income->update();
 
         return response()->json(['status' => 'success'], 200);
@@ -105,6 +90,11 @@ class IncomeController extends Controller
                         ->sum('amount');
 
         return response()->json($amount);
+    }
+
+    protected function isThisMonth($date)
+    {
+        return ($date >= Carbon::now()->startOfMonth()) ? $date :  Carbon::now()->startOfMonth();
     }
     
 }

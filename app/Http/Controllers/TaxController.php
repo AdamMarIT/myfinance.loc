@@ -40,8 +40,15 @@ class TaxController extends Controller
         $tax->type = $request->type;
         $tax->periodicity = $request->periodicity;
 
-        if (in_array($request->periodicity, ['month', 'quarter', 'year'])) {
-            $tax->active = 1;
+        switch ($request->periodicity) {
+            case 'month':
+                $tax->active = 1; break;
+            case 'quarter':
+                $tax->active = 4; break;
+            case 'year':
+                $tax->active = 12; break;
+            default:
+                $tax->active = 0;
         }
 
         $tax->save();
@@ -63,9 +70,20 @@ class TaxController extends Controller
         $tax->type = $request->type;
         $tax->periodicity = $request->periodicity;
 
-        if (in_array($request->periodicity, ['month', 'quarter', 'year'])) {
-            $tax->active = 1;
+        switch ($request->periodicity) {
+            case 'month':
+                $tax->active = 1; break;
+            case 'quarter':
+                $tax->active = 4; break;
+            case 'year':
+                $tax->active = 12; break;
+            default:
+                $tax->active = 0;
         }
+
+        // if (in_array($request->periodicity, ['month', 'quarter', 'year'])) {
+        //     $tax->active = 1;
+        // }
         
         $tax->update();
 
@@ -87,9 +105,9 @@ class TaxController extends Controller
 
     public function getTaxAmount() 
     {
-        $taxesArr = $this->getTaxListForSidebar();
-        $amountArr = array_column($taxesArr, 'amount');
-        $amount = array_sum($amountArr);
+        $taxes = $this->getTaxListForSidebar();
+        $amounts = array_column($taxes, 'amount');
+        $amount = array_sum($amounts);
 
         return response()->json($amount);
     }
@@ -97,41 +115,54 @@ class TaxController extends Controller
 
     public function getTaxForSidebar()
     {
-        $taxesArr = $this->getTaxListForSidebar();
+        $taxes = $this->getTaxListForSidebar();
 
-        return response()->json($taxesArr);
+        return response()->json($taxes);
     }
 
     public function getTax() 
     {
+        $month = Carbon::now()->month;
+
+        if (in_array($month, [3, 6, 9])) {
+            $active = [1, 4];
+        } elseif ($month == 12) {
+            $active = [1, 4, 12];
+        } else {
+            $active = [1];
+        }
+
         $user = auth('api')->user();
         $taxes = Tax::where('user_id', $user->id)
-                    ->where('active', '1')
-                    ->orwhere('created_at', '>=', Carbon::now()->startOfMonth())
+                    ->where(function ($q) use ($active) {
+                    $q->whereIn('active', $active)->orWhere('created_at',  Carbon::now()->startOfMonth());})
+                    
                     ->orderBy('created_at')
                     ->get();
-
+                   
         return $taxes;
+
     }
 
     public function getTaxListForSidebar() 
     {
-        $taxes = $this->getTax()->toArray();
-        $taxesArr = [];
+        $user = auth('api')->user();
+        $amountIncome = Income::where('user_id', $user->id)->sum('amount');
 
-        foreach ($taxes as $tax) {
-
+        $taxes = $this->getTax()->map(function ($tax) use ($amountIncome) {
+            
             if ($tax['type'] == 'fixed') {
                 $amount = $tax['amount'];     
-            }else {
-                $user = auth('api')->user();
-                $amountIncome = Income::where('user_id', $user->id)->sum('amount');
+            }else {   
                 $amount = $amountIncome * $tax['amount'] / 100;
             }
 
-            $taxesArr[] = ['name' => $tax['name'], 'amount' => $amount];
-        }
+            return [
+                'name' => $tax['name'], 
+                'amount' => $amount
+            ];
+        });
 
-        return $taxesArr;
+        return $taxes->toArray();
     }
 }

@@ -18,10 +18,10 @@ class UserFileController extends Controller
     {
         $user = auth('api')->user();
         $userFiles = UserFile::where('user_id', $user->id)->get()->toArray();
-        $filesArr = [];
+        $files = [];
 
         foreach ($userFiles as $userFile) {
-            $filesArr[] = [
+            $files[] = [
                 'id' => $userFile['id'], 
                 'name' => $userFile['name'], 
                 'date' => date('d.m.Y', strtotime($userFile['created_at'])),
@@ -29,7 +29,7 @@ class UserFileController extends Controller
             ];
         }
 
-        return response()->json($filesArr);
+        return response()->json($files);
     }
 
     /**
@@ -43,29 +43,24 @@ class UserFileController extends Controller
         $file = $request->file('file');
 
         if (!$file) {
-            return response()->json(['error' => 'No file'], 400);
+            return response()->json(['error' => 'No file']);
         } 
 
         if($file->getSize() > '100000'){
-            return response()->json(['error' => 'File max 100Mb'], 500);
+            return response()->json(['error' => 'File max 100Mb']);
         }
 
         $disk = Storage::disk('local');
         $user = auth('api')->user();
         $name =  $file->getClientOriginalName();
-        $path = sha1($user->id.$name);
-        
-        if (UserFile::where('name', '=', $name)->exists()) {
-            return response()->json(['error' => 'File exists'], 401);
-        } 
-
+        $path = sha1($user->id . $name . time());
         $userFile = $this->saveUserFile($file, $user->id, $name, $path);
         $disk->put(
             'uploads/'.$path,
             file_get_contents($file->getRealPath())
         );
 
-        return response()->json(['status' => 'success'], 200); 
+        return response()->json(['status' => 'success']); 
     }
 
     public function saveUserFile($file, $userId, $name, $path) {
@@ -87,7 +82,6 @@ class UserFileController extends Controller
          
             return response()->download($path, $name);  
         }
-        
     }
 
     /**

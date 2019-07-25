@@ -12,7 +12,6 @@
 </template>
 
 <script>
-	//import List from '@/components/List.vue'
 	import ListIncomes from '@/components/ListIncomes.vue'
 	import ListTaxes from '@/components/ListTaxes.vue'
 

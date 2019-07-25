@@ -14,7 +14,7 @@ class AddActiveToTaxesTable extends Migration
     public function up()
     {
         Schema::table('taxes', function (Blueprint $table) {
-            $table->char('active', 1)->nullable();
+            $table->tinyInteger('active')->unsigned()->nullable();
         });
     }
 
